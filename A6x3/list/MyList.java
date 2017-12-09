@@ -3,8 +3,8 @@ package list;
 public class MyList<T> {
 
 	private int size;
-	Node<T> first;
-	Node<T> last;
+	private Node<T> first;
+	private Node<T> last;
 
 	public MyList() {
 		size = 0;
