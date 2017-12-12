@@ -7,31 +7,53 @@ public class MyList<T> {
 	private Node<T> last;
 
 	public MyList() {
-		size = 0;
 		first = null;
 		last = null;
+		size = 0;
 	}
 
-	public T getNo(int no) {
-		assert 0 <= no && no < getSize() : "Argument no is not in size";
-		return iGetNodeNo(no).getData();
+	/**
+	 * 
+	 * @param position the index of the element in the list to return
+	 * @return data of element at position
+	 */
+	public T getNo(int position) {
+		assert 0 <= position && position < getSize() : "Argument no is not in size";
+		return iGetNodeNo(position).getData();
 	}
 
+	/**
+	 * 
+	 * @return the first element's data of the list
+	 */
 	public T getF() {
 		return first.getData();
 	}
 
+	/**
+	 * 
+	 * @return the last element's data of the list
+	 */
 	public T getL() {
 		return last.getData();
 	}
 
-	public T extractNo(int no) {
-		assert 0 <= no && no < getSize() : "Argument no is not in size";
-		Node<T> nodeToExtract = iGetNodeNo(no);
+	/**
+	 * remove a specific element from the list
+	 * @param position the position of the element which should be removed
+	 * @return the removed element data
+	 */
+	public T extractNo(int position) {
+		assert 0 <= position && position < getSize() : "Argument no is not in size";
+		Node<T> nodeToExtract = iGetNodeNo(position);
 		iRemoveNode(nodeToExtract);
 		return nodeToExtract.getData();
 	}
 
+	/**
+	 * remove the first element of the list and return it. 
+	 * @return the first element data of the list
+	 */
 	public T extractF() {
 		if (!isEmpty()) {
 			T ret = first.getData();
@@ -42,6 +64,10 @@ public class MyList<T> {
 		}
 	}
 
+	/**
+	 * remove the last element of the list and return it
+	 * @return the last element data of the list
+	 */
 	public T extractL() {
 		if (!isEmpty()) {
 			T ret = last.getData();
@@ -52,44 +78,54 @@ public class MyList<T> {
 		}
 	}
 
-	public boolean putNo(int no, T element) {
-		assert 0 <= no && no <= getSize() : "Argument no is not in size";
+	/**
+	 * add a new element to the list at a specific position in the list or at the end of the list. 
+	 * @param position position where the new element should be added. Needs to be 0 <= position <= size
+	 * @param element the element that should be added
+	 * @return
+	 */
+	public boolean putNo(int position, T element) {
+		assert 0 <= position && position <= getSize() : "Argument no is not in size";
 		assert element != null : "Argument can't be null!";
 
 		Node<T> newNode = new Node<>(element);
-		Node<T> node = iGetNodeNo(no);
+		Node<T> node = iGetNodeNo(position);
 
-		if (no > size)
+		if (position > size)
 			return false;
 
 		if (size == 0) {
 			first = newNode;
 			last = first;
-		} else if (no == 0) {
-			node.setPrevious(newNode);
-			newNode.setNext(node);
+		} else if (position == 0) {
+			node.previous = newNode;
+			newNode.next = node;
 			first = newNode;
-		} else if (no == size) {
-			newNode.setPrevious(last);
-			last.setNext(newNode);
+		} else if (position == size) {
+			newNode.previous = last;
+			last.next = newNode;
 			last = newNode;
 		} else {
-			node.getPrevious().setNext(newNode);
-			newNode.setPrevious(node.getPrevious());
-			node.setPrevious(newNode);
-			newNode.setNext(node);
+			node.previous.next = newNode;
+			newNode.previous = node.previous;
+			node.previous = newNode;
+			newNode.next = node;
 		}
 
 		size++;
 		return true;
 	}
 
+	/**
+	 * add a new element to the begin of the list. The other elements are shifted back
+	 * @param element the element that should be added
+	 */
 	public void putF(T element) {
 		Node<T> firstNode = first;
 		if (!isEmpty()) {
 			Node<T> newFirstNode = new Node<>(element);
-			firstNode.setPrevious(newFirstNode);
-			newFirstNode.setNext(firstNode);
+			firstNode.previous = newFirstNode;
+			newFirstNode.next = firstNode;
 			first = newFirstNode;
 		} else {
 			first = new Node<>(element);
@@ -99,12 +135,16 @@ public class MyList<T> {
 		size++;
 	}
 
+	/**
+	 * add a new element to the end of the list
+	 * @param element the element that should be added
+	 */
 	public void putL(T element) {
 		Node<T> lastNode = last;
 		if (!isEmpty()) {
 			Node<T> newLastNode = new Node<>(element);
-			lastNode.setNext(newLastNode);
-			newLastNode.setPrevious(lastNode);
+			lastNode.next = newLastNode;
+			newLastNode.previous = lastNode;
 			last = newLastNode;
 		} else {
 			last = new Node<>(element);
@@ -114,65 +154,101 @@ public class MyList<T> {
 		size++;
 	}
 
-	public T setNo(int no, T element) {
-		assert 0 <= no && no < getSize() : "Argument no is not in size";
+	/**
+	 * write new element-object into the list at a specific position and replace the element at this position.
+	 * @param position position where the element should be written to with 0 <= pos < size
+	 * @param element the element that should be written into the list
+	 * @return the overwritten/replaced element's data
+	 */
+	public T setNo(int position, T element) {
+		assert 0 <= position && position < getSize() : "Argument no is not in size";
 		assert element != null : "Argument can't be null!";
-		Node<T> node = iGetNodeNo(no);
+		Node<T> node = iGetNodeNo(position);
 
 		Node<T> newNode = new Node<>(element);
-		newNode.setNext(node.getNext());
+		newNode.next = node.next;
 
 		if (node == first) {
 			if (first.hasNext())
-				first.getNext().setPrevious(newNode);
-			newNode.setNext(first.getNext());
+				first.next.previous = newNode;
+			newNode.next = first.next;
 			first = newNode;
 		} else {
-			newNode.setPrevious(node.getPrevious());
-			node.getPrevious().setNext(newNode);
+			newNode.previous = node.previous;
+			node.previous.next = newNode;
 			if (node.hasNext())
-				node.getNext().setPrevious(newNode);
+				node.next.previous = newNode;
 		}
 
 		return node.getData();
 	}
 
-	public void removeNo(int no) {
-		iRemoveNode(iGetNodeNo(no));
+	/**
+	 * @param position position of the element which should be removed from the list
+	 */
+	public void removeNo(int position) {
+		iRemoveNode(iGetNodeNo(position));
 	}
 
+	/**
+	 * removes first occurance of a specific element in the list
+	 * @param element the element which should be removed from the list
+	 * @return true if the element was removed, false if the element wasn't in the list
+	 */
 	public boolean remove(T element) {
 		return iRemoveNode(iSearchNode(element));
 	}
 
+	/**
+	 * clear the list and set the size to zero
+	 */
 	public void clear() {
 		size = 0;
 		first = null;
 		last = null;
 	}
 
+	/**
+	 * 
+	 * @return true if the list is empty, false if not
+	 */
 	public boolean isEmpty() {
 		return size == 0;
 	}
 
+	/**
+	 * 
+	 * @return the size of the list
+	 */
 	public int getSize() {
 		return size;
 	}
 
+	/**
+	 * 
+	 * @param element
+	 *            of type T to check
+	 * @return true if element is in the list, false if not
+	 */
 	public boolean contains(T element) {
 		assert element != null : "Argument can't be null!";
 		return iSearchNode(element) != null;
 	}
 
-	private Node<T> iGetNodeNo(int no) {
+	// -----------------------------------------------------------------------------------------
+
+	/**
+	 * private helper methods
+	 */
+
+	private Node<T> iGetNodeNo(int position) {
 		// assert 0 <= no && no < getSize() : "Argument no is not in size";
-		Node<T> node;
-		node = first;
-		if (node == null || size < no)
+		Node<T> node = first;
+		if (node == null || size < position)
 			return null;
 
-		for (int i = 0; i < no; i++) {
-			node = node.getNext();
+		for (int i = 0; i < position; i++) {
+			node = node.next;
 		}
 
 		return node;
@@ -184,7 +260,7 @@ public class MyList<T> {
 		while (node != null) {
 			if (node.getData().equals(element))
 				return node;
-			node = node.getNext();
+			node = node.next;
 		}
 		return node;
 	}
@@ -196,19 +272,19 @@ public class MyList<T> {
 			return removed;
 
 		if (node != first && node != last) {
-			node.getPrevious().setNext(node.getNext());
-			node.getNext().setPrevious(node.getPrevious());
+			node.previous.next = node.next;
+			node.next.previous = node.previous;
 			removed = true;
 		}
 		if (node == first) {
-			first = node.getNext();
+			first = node.next;
 			if (first != null)
-				first.setPrevious(null);
+				first.previous = null;
 			removed = true;
 		}
 		if (node == last) {
-			last.setNext(null);
-			last = node.getPrevious();
+			last.next = null;
+			last = node.previous;
 			removed = true;
 		}
 
@@ -217,4 +293,6 @@ public class MyList<T> {
 
 		return removed;
 	}
+
+	// -----------------------------------------------------------------------------------------
 }
