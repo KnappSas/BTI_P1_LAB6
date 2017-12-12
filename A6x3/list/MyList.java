@@ -2,9 +2,9 @@ package list;
 
 public class MyList<T> {
 
+	Node<T> first;
+	Node<T> last;
 	private int size;
-	private Node<T> first;
-	private Node<T> last;
 
 	public MyList() {
 		first = null;
@@ -94,18 +94,18 @@ public class MyList<T> {
 		if (position > size)
 			return false;
 
-		if (size == 0) {
+		if (isEmpty()) {
 			first = newNode;
 			last = first;
-		} else if (position == 0) {
+		} else if (position == 0) { //need to set new first element
 			node.previous = newNode;
 			newNode.next = node;
 			first = newNode;
-		} else if (position == size) {
+		} else if (position == size) {	//need to set new last element
 			newNode.previous = last;
 			last.next = newNode;
 			last = newNode;
-		} else {
+		} else {	//usual case, don't get the order of new assignments wrong here 
 			node.previous.next = newNode;
 			newNode.previous = node.previous;
 			node.previous = newNode;
