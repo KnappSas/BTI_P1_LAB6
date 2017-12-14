@@ -11,7 +11,7 @@ import cards.Card.Rank;
 public class CardProcessor implements CardProcessor_I {
 
 	final Map<Rank, List<Card>> cardMap = new HashMap<Rank, List<Card>>();
-	final int kDrillingCount = 3;
+	final int DRILLINGCOUNT = 3;
 
 	@Override
 	public Object process(Card card) {
@@ -24,7 +24,7 @@ public class CardProcessor implements CardProcessor_I {
 		} else
 			rankList.add(card);
 
-		if (rankList.size() == kDrillingCount)
+		if (rankList.size() == DRILLINGCOUNT)
 			return rankList;
 
 		return null;
