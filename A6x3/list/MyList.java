@@ -2,8 +2,8 @@ package list;
 
 public class MyList<T> {
 
-	Node<T> first;
-	Node<T> last;
+	private Node<T> first;
+	private Node<T> last;
 	private int size;
 
 	public MyList() {
@@ -24,17 +24,19 @@ public class MyList<T> {
 
 	/**
 	 * 
-	 * @return the first element's data of the list
+	 * @return the first element's data of the list. List shouldn't be empty.
 	 */
 	public T getF() {
+	    assert size > 0 : "List is empty";
 		return first.getData();
 	}
 
 	/**
 	 * 
-	 * @return the last element's data of the list
+	 * @return the last element's data of the list. List shouldn't be empty.
 	 */
 	public T getL() {
+	    assert size > 0 : "List is empty";
 		return last.getData();
 	}
 
@@ -187,6 +189,7 @@ public class MyList<T> {
 	 * @param position position of the element which should be removed from the list
 	 */
 	public void removeNo(int position) {
+	    assert 0 <= position && position < size : "Illegal Argument";
 		iRemoveNode(iGetNodeNo(position));
 	}
 
@@ -244,7 +247,7 @@ public class MyList<T> {
 	private Node<T> iGetNodeNo(int position) {
 		// assert 0 <= no && no < getSize() : "Argument no is not in size";
 		Node<T> node = first;
-		if (node == null || size < position)
+		if (node == null || position >= size)
 			return null;
 
 		for (int i = 0; i < position; i++) {

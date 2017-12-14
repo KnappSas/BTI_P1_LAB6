@@ -1,6 +1,6 @@
 package list;
 
-public class Node<T> {
+class Node<T> {
 	private T data;
 	Node<T> next;
 	Node<T> previous;
